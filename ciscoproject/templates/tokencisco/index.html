@@ -1,0 +1,115 @@
+
+{% extends 'tokencisco/base.html' %}
+{% load static %}
+{% block header %}
+
+{% include 'tokencisco/css.html' %}
+
+
+{% endblock header %}
+{% block css %}
+
+
+{% endblock %}
+{% block base_content %}
+
+
+<div class="jumbotron text-center">
+  <h1>My First Bootstrap Page</h1>
+  <p>Resize this responsive page to see the effect!</p> 
+</div>
+
+<script>
+	
+
+	
+		
+	 function generateTokenss() {
+
+	 	var username = document.getElementById("username").value
+        var password =$('#password').val()
+        var datString = JSON.stringify({"username":username,"password":password})
+        var BASE_SITE_URL = "http://127.0.0.1:8000"
+  var urll= BASE_SITE_URL + '/user/routerdata/'
+
+    $.ajax({
+      type: "POST",
+     
+     url:'/user/routerdata',
+
+    type: "POST",
+
+    data:datString,
+    
+      // beforeSend: function (xhr, settings) {
+      //                                           xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
+      //                                       },
+      success: function(response){
+      	alert(response)
+        //$('#message').html("<h2>Contact Form Submitted!</h2>")
+      }
+    });
+   
+  };
+
+
+	</script>
+
+
+
+  
+<div class="container">
+  <div class="row">
+  	<table class="table table-bordered">
+  
+    <tbody>
+      <tr>
+        <th>Total Disk Size</td>
+        <td>{{disk_usage}} Bytes</td>
+        
+      </tr>
+     <tr>
+        <th>Used Disk Size</td>
+        <td>{{used_disk}}  Bytes</td>
+        
+      </tr>
+      <tr>
+        <th>Inode</th>
+        <td>{{inode}}</td>
+        
+      </tr>
+
+      <tr>
+        <th>File List</th>
+        <td>{{listdir}}</td>
+        
+      </tr>
+    </tbody>
+  </table>
+
+
+  <table class="table table-bordered">
+  <thead>
+  	<tr>
+  		<th>IP
+  		</th>
+  		<th>Hostname</th>
+  		<th>Action</th>
+  	</tr>
+  </thead>
+    <tbody id="routerdata">
+     
+    </tbody>
+  </table>
+
+
+   
+</div>
+
+
+
+{% endblock base_content %}
+
+{% block htmljs %}
+
+{% endblock htmljs %}
