@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'tokenapp',
     'rest_framework',
     'rest_framework.authtoken',
+    'django_filters',
 ]
 
 MIDDLEWARE = [
@@ -154,6 +155,11 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
     'rest_framework.authentication.SessionAuthentication',
     'rest_framework.authentication.BasicAuthentication'
+    ),
+      'DEFAULT_FILTER_BACKENDS': (
+         'rest_framework.filters.SearchFilter',
+        'django_filters.rest_framework.DjangoFilterBackend',
+        
     ),
    # 'EXCEPTION_HANDLER': 'common.utils.custom_exception_handler'
 }

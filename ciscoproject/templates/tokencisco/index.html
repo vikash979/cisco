@@ -14,10 +14,7 @@
 {% block base_content %}
 
 
-<div class="jumbotron text-center">
-  <h1>My First Bootstrap Page</h1>
-  <p>Resize this responsive page to see the effect!</p> 
-</div>
+{% include 'tokencisco/menubar.html' %}
 
 <script>
 	
@@ -60,6 +57,7 @@
   
 <div class="container">
   <div class="row">
+
   	<table class="table table-bordered">
   
     <tbody>
@@ -86,6 +84,12 @@
       </tr>
     </tbody>
   </table>
+
+     <div class="form-group">
+      
+    
+ <input type="text" name="searchfield" class="form-control" style="width: 15" id="searchfield" onkeydown="textsearch(this.id)" placeholder="Search here Hostname and macaddress">
+    </div>
 
 
   <table class="table table-bordered">

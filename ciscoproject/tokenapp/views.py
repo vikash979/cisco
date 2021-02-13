@@ -26,6 +26,8 @@ import subprocess
 
 
 
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters
 
 
 from django.contrib.auth import authenticate
@@ -40,6 +42,7 @@ from rest_framework.status import (
     HTTP_204_NO_CONTENT
 )
 from rest_framework.response import Response
+import re
 
 
 @csrf_exempt
@@ -58,7 +61,6 @@ def login(request):
 	if not user:
 		return Response({'error': 'Invalid Credentials'},status=HTTP_404_NOT_FOUND)
 	token,_= Token.objects.get_or_create(user=user)
-	print((token.key))
 	return Response({'token': token.key}, status=HTTP_200_OK)
 
 
@@ -75,8 +77,11 @@ class RouterViewset(viewsets.ModelViewSet):
     queryset = RouterDetails.objects.all()
     serializer_class = serializers.RouterSerializer
     #permission_classes = [IsAuthenticated]
-    #authentication_classes =[TokenAuthentication]
-    #permission_classes = [IsAuthenticatedOrReadOnly]
+    authentication_classes =[TokenAuthentication]
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    filter_backends = [DjangoFilterBackend,filters.SearchFilter]
+    search_fields = ['hostname','macaddress', 'sapid']
+    filterset_fields = ('hostname','macaddress','sapid')
 
 
     def get_object(self, pk):
@@ -87,8 +92,6 @@ class RouterViewset(viewsets.ModelViewSet):
 
 
     def retrieve(self, request, pk=None):
-    	print("----------------",pk)
-
     	instance = self.get_object(pk=pk)
     	serializer = serializers.RouterSerializer(instance)
     	return Response(serializer.data)
@@ -107,7 +110,6 @@ class RouterViewset(viewsets.ModelViewSet):
     	partial = True
     	#serialize = RouterDetails.objects.filter(ip=request.data.get('ip')).update(hostname=request.data.get('hostname'))
     	serializer = serializers.RouterSerializer(instance, data=request.data, partial=partial)
-    	print(":::::::::", request.data.get('hostname'))
     	if serializer.is_valid():
     		# print("helloooo")
     		serializer.save()
@@ -125,12 +127,14 @@ class RouterViewset(viewsets.ModelViewSet):
         return Response(status=HTTP_204_NO_CONTENT)
 
 
+
 class IpViewset(viewsets.ModelViewSet):   
     queryset = RouterDetails.objects.all()
     serializer_class = serializers.RouterSerializer
     #permission_classes = [IsAuthenticated]
     authentication_classes =[TokenAuthentication]
     permission_classes = [IsAuthenticatedOrReadOnly]
+    
 
 
     def get_object(self, pk):
@@ -141,8 +145,6 @@ class IpViewset(viewsets.ModelViewSet):
 
 
     def list(self, request, pk=None):
-    	print("----------------",pk)
-
     	instance = self.get_object(pk=pk)
     	serializer = serializers.RouterSerializer(instance)
     	return Response(serializer.data)
@@ -240,10 +242,26 @@ def delete_post(request,pk):
    
 
 def update_post(request):
-	dell = RouterDetails.objects.filter(ip=request.GET.get('ip')).update(hostname=request.GET.get('hostname'))
+
+    dell = RouterDetails.objects.filter(ip=request.GET.get('ip')).update(hostname=request.GET.get('hostname'), macaddress=request.GET.get('macadd'))
+    return redirect('/user/tokenapp/')
+	
 	
 	#dell.delete()
-	return redirect('/user/tokenapp/')
+
+from django.views.decorators.csrf import csrf_exempt
+
+@csrf_exempt
+def nrouter_post(request):
+    hostname = request.GET.get('hostname')
+    loopback = request.GET.get('ip')
+    macadd = request.GET.get('macadd')
+    sapid = request.GET.get('sapid')
+    print(sapid,"----",loopback,"----",macadd,"----",hostname)
+    routerdata =  RouterDetails.objects.create(sapid=sapid,ip=loopback, hostname=hostname,macaddress=macadd)
+    return redirect('/user/tokenapp/')
+
+
 
 
 
@@ -261,6 +279,48 @@ class TokenUpdateView(TemplateView):
 
 
     	return render(request, self.template_name, ctx)
+        
+class AddNrouterView(TemplateView):
+    template_name = "tokencisco/naddrouter.html"
+    def get(self, request, *args, **kwargs):
+        ctx = {}
+        return render(request, self.template_name, ctx)
+
+class AddRouterView(TemplateView):
+    template_name = "tokencisco/addrouter.html"
+
+    def get(self, request, *args, **kwargs):
+        ctx = {}
+        return render(request, self.template_name, ctx)
+
+
+    def post(self,request,*args, **kwargs):
+        ctx = {}
+        error = {}
+        if request.method == "POST":
+            sapid = request.POST.get('sapid')
+            hostname = request.POST.get('hostname')
+            loopback = request.POST.get('ip')
+            mcadd = request.POST.get('mcadd')
+            if sapid=='' :
+                ctx['sapid'] = "Please Insert the sapid"
+            if hostname=='' :
+                ctx['hostname'] = "Please Insert the hostname"
+            if loopback=='' :
+                ctx['loopback'] = "Please Insert the loopback"
+           
+
+            if mcadd=='' :
+                error['sapid'] = "Please Insert the mcadd"
+            if error == {}:
+                routerdata =  RouterDetails.objects.create(sapid=sapid,ip=loopback, hostname=hostname,macaddress=mcadd)
+                ctx ['msg'] = "Saved Successfully"
+                return redirect('/user/tokenapp/')
+
+            else:
+                ctx ['msg'] = ctx
+                
+        return render(request, self.template_name, ctx)
         
 
  

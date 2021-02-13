@@ -4,10 +4,11 @@ from .models import (
 )
 
 @admin.register(RouterDetails)
+
+
 class RouterData(admin.ModelAdmin):
-	list_display = ('id','hostname','ip')
-#admin.site.register(RouterDetails)
-# admin.site.register(SubjectUnit)
+	list_display = ('id','hostname','ip','macaddress','sapid')
+
 # admin.site.register(UnitChapter)
 # admin.site.register(ChapterTopic)
 # admin.site.register(TopicSubtopic)

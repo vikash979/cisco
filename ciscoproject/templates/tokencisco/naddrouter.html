@@ -1,0 +1,72 @@
+
+{% extends 'tokencisco/base.html' %}
+{% load static %}
+{% block header %}
+
+{% include 'tokencisco/css.html' %}
+
+
+{% endblock header %}
+{% block css %}
+
+
+{% endblock %}
+{% block base_content %}
+{% include 'tokencisco/menubar.html' %}
+
+
+
+
+  
+<div class="container">
+  <div class="row">
+  	{{msg}}
+
+<form action="/flight_ticket/book" name="myform" method="post">
+  . . . Enter the number of tickets to be booked:
+  <input name="nooftickets" id="totl" type="text"><br/><br/>
+  <a href="#" id="names" onclick="totaltimes();">Enter names</a>
+  <div id='container' />
+  </div>
+  <br/><br/>
+</form>
+
+    <div class="form-group">
+      <label for="email">Number of Times:</label>
+      <div class="form-group">
+        <input type="text" id="totaltimes" class="form-control" value= " " placeholder="Enter number here" onchange="totaltimes()">
+      </div>
+      
+
+    </div>
+
+<form>
+    
+     <table class="table table-bordered">
+  <thead>
+    <tr>
+      <th>SapId</th>
+      <th>IP
+      </th>
+      <th>Hostname</th>
+      <th>macaddress</th>
+    </tr>
+  </thead>
+    <tbody id="nrouterdata">
+     
+    </tbody>
+  </table>
+</form>
+    
+    <input type="submit" class="btn btn-default" name="submit" id="nsubmit" value="Add Router">
+  
+   
+</div>
+
+
+
+{% endblock base_content %}
+
+{% block htmljs %}
+
+{% endblock htmljs %}
