@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 import telnetlib
-#import getpass
+import getpass
 import sys
 
 HOST="localhost"
 #input("Enter your telnet HOST_IP: ")
 host_user = "vikash"
 #input("Enter your telnet username: ")
-#password = "vikash"
-password = getpass.getpass()
+#password = "sudha"
+password  = getpass.getpass()
 #import getpass
 
 #HOST = "http://localhost:8000/"
