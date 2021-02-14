@@ -7,8 +7,8 @@ HOST="localhost"
 #input("Enter your telnet HOST_IP: ")
 host_user = "vikash"
 #input("Enter your telnet username: ")
-password = "sudha"
-#getpass.getpass()
+#password = "vikash"
+password = getpass.getpass()
 #import getpass
 
 #HOST = "http://localhost:8000/"
